@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h3>Admin Dashboard</h3>
+<input id="email"><button onclick="login()">Login</button>
+<div id="r"></div>
+
+<script>
+const API="🔧PASTE_APPS_SCRIPT_URL";
+function login(){
+ fetch(`${API}?action=admin&email=${email.value}`)
+ .then(r=>r.json())
+ .then(d=>d.admin?load():alert("Denied"));
+}
+function load(){
+ fetch(`${API}?action=results`)
+ .then(r=>r.json())
+ .then(d=>{
+  r.innerHTML=d.map(x=>
+   `<p>${x[0]} | ${x[2]} | Rank ${x[4]}</p>`).join("");
+ });
+}
+</script>
+</body>
+</html>
