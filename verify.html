@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h3>Certificate Verify</h3>
+<div id="r"></div>
+
+<script>
+const API="🔧PASTE_APPS_SCRIPT_URL";
+const id=new URLSearchParams(location.search).get("cert");
+fetch(`${API}?action=verify&cert=${id}`)
+.then(r=>r.json())
+.then(d=>{
+ r.innerHTML=d.valid?"✅ VALID":"❌ INVALID";
+});
+</script>
+</body>
+</html>
