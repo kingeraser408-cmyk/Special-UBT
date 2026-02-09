@@ -1,8 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Korea UBT Demo</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f5f5f5;
+  margin:0;
+  padding:0;
+}
+.container{
+  max-width:600px;
+  margin:auto;
+  padding:15px;
+}
+.card{
+  background:#fff;
+  padding:15px;
+  border-radius:8px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+button{
+  padding:10px 15px;
+  font-size:16px;
+  border:none;
+  border-radius:5px;
+  background:#007bff;
+  color:#fff;
+}
+button:disabled{background:#999;}
+.option{
+  display:block;
+  margin:8px 0;
+}
+.timer{
+  font-weight:bold;
+  color:red;
+  text-align:right;
+}
+.hidden{display:none;}
+</style>
+</head>
+
 <body>
+<div class="container">
 
-<button onclick="alert('Start အလုပ်လုပ်ပါတယ်')">Start</button>
+  <!-- START SCREEN -->
+  <div id="startScreen" class="card">
+    <h3>2026 Korea UBT (Demo)</h3>
+    <input id="email" placeholder="Email" style="width:100%;padding:8px"><br><br>
+    <input id="batch" placeholder="Batch" style="width:100%;padding:8px"><br><br>
+    <button onclick="startExam()">Start</button>
+  </div>
 
+  <!-- EXAM SCREEN -->
+  <div id="examScreen" class="card hidden">
+    <div class="timer">⏱ <span id="time">50:00</span></div>
+    <h4 id="qText"></h4>
+    <div id="options"></div>
+    <button onclick="nextQ()">Next</button>
+  </div>
+
+  <!-- RESULT -->
+  <div id="resultScreen" class="card hidden">
+    <h3>Result</h3>
+    <p id="scoreText"></p>
+  </div>
+
+</div>
+
+<script>
+/* ===== DEMO QUESTIONS ===== */
+const questions = [
+  {
+    q:"Korea ရဲ့ Capital ဘာလဲ?",
+    options:["Seoul","Busan","Incheon","Daegu"],
+    a:0
+  },
+  {
+    q:"한국어 မှာ '감사합니다' အဓိပ္ပါယ်?",
+    options:["Hello","Sorry","Thank you","Bye"],
+    a:2
+  }
+];
+
+let index=0, score=0, timer, timeLeft=50*60;
+
+/* ===== START EXAM ===== */
+function startExam(){
+  const email=document.getElementById("email").value;
+  const batch=document.getElementById("batch").value;
+  if(!email || !batch){
+    alert("Email နဲ့ Batch ထည့်ပါ");
+    return;
+  }
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("examScreen").classList.remove("hidden");
+  startTimer();
+  loadQ();
+}
+
+/* ===== TIMER ===== */
+function startTimer(){
+  timer=setInterval(()=>{
+    timeLeft--;
+    let m=Math.floor(timeLeft/60);
+    let s=timeLeft%60;
+    document.getElementById("time").innerText=
+      m+":"+(s<10?"0"+s:s);
+    if(timeLeft<=0){
+      clearInterval(timer);
+      finish();
+    }
+  },1000);
+}
+
+/* ===== LOAD QUESTION ===== */
+function loadQ(){
+  const q=questions[index];
+  document.getElementById("qText").innerText=
+    (index+1)+". "+q.q;
+  const optDiv=document.getElementById("options");
+  optDiv.innerHTML="";
+  q.options.forEach((o,i)=>{
+    optDiv.innerHTML+=`
+      <label class="option">
+        <input type="radio" name="opt" value="${i}">
+        ${o}
+      </label>`;
+  });
+}
+
+/* ===== NEXT ===== */
+function nextQ(){
+  const sel=document.querySelector("input[name='opt']:checked");
+  if(sel && parseInt(sel.value)===questions[index].a){
+    score+=2.5; // UBT style
+  }
+  index++;
+  if(index<questions.length){
+    loadQ();
+  }else{
+    finish();
+  }
+}
+
+/* ===== FINISH ===== */
+function finish(){
+  clearInterval(timer);
+  document.getElementById("examScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+  document.getElementById("scoreText").innerText=
+    "Score : "+score;
+}
+</script>
 </body>
-</html>
+  </html>
