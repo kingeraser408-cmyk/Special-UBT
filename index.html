@@ -1,71 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>2026 Korea UBT</title>
-<style>
-body{font-family:sans-serif;background:#f2f2f2}
-.card{background:#fff;margin:10px;padding:15px;border-radius:8px}
-</style>
-</head>
 <body>
 
-<input id="email" placeholder="Email">
-<input id="batch" placeholder="Batch">
-<button onclick="start()">Start</button>
+<button onclick="alert('Start အလုပ်လုပ်ပါတယ်')">Start</button>
 
-<div id="timer"></div>
-<div id="exam"></div>
-
-<script>
-const API="https://script.google.com/macros/s/AKfycbwvLa3QdCPXZ-0UKlPUBLe28clwiMIN7leL1o3XJxjTdRENzCtpUtGkZXWAcz1_zssoCw/exec";
-let correct=0,startT,sec=50*60;
-
-function start(){
- fetch(`${API}?action=login&email=${email.value}`)
- .then(r=>r.json())
- .then(d=>d.ok?load():alert("Payment required"));
-}
-
-function load(){
- startT=Date.now(); timer();
- fetch(`${API}?action=questions`)
- .then(r=>r.json())
- .then(q=>{
-  exam.innerHTML=q.map(x=>`
-   <div class="card">
-    ${x[1]=="listen"?`<audio src="${x[8]}" controls></audio>`:""}
-    <p>${x[2]}</p>
-    ${["a","b","c","d"].map((v,i)=>`
-     <label>
-      <input type="radio" name="${x[0]}" 
-       onclick="if('${v}'=='${x[7]}')correct++">
-      ${x[i+3]}
-     </label><br>`).join("")}
-   </div>`).join("");
- });
-}
-
-function timer(){
- setInterval(()=>{
-  sec--; timerDiv.innerText="⏱ "+sec;
-  if(sec<=0) submit();
- },1000);
-}
-
-function submit(){
- fetch(API,{method:"POST",
-  body:JSON.stringify({
-   action:"submit",
-   email:email.value,
-   batch:batch.value,
-   correct:correct,
-   time:Math.floor((Date.now()-startT)/1000),
-   wrongColor:[]
-  })
- });
- alert("Finished");
-}
-</script>
 </body>
-  </html>
+</html>
