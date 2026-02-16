@@ -23,30 +23,37 @@
         .contact-btn { padding: 10px; border-radius: 8px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
         .tg-btn { background: var(--telegram); border: 1px solid #0077b5; }
         .ph-btn { background: var(--success); border: 1px solid #27ae60; }
-        
-        .qr-display { width: 220px; height: auto; border: 4px solid white; border-radius: 10px; margin: 15px 0; }
-        .pay-info { background: #0d1117; padding: 10px; border-radius: 8px; border: 1px dashed var(--primary); margin: 10px 0; width: 85%; }
-
+        .contact-btn:hover { opacity: 0.9; transform: translateY(-2px); }
         #exam-page { background: #f0f2f5; justify-content: flex-start; }
         .top-bar { width: 100%; background: #1a233a; color: white; padding: 12px; display: flex; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
         .q-card { width: 100%; max-width: 600px; background: white; padding: 20px; border-radius: 10px; margin-top: 20px; border-top: 5px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         #q-text { font-size: 18px; margin: 15px 0; color: #333; line-height: 1.8; word-break: break-word; }
         .audio-btn { background: #ffc107; border: none; padding: 12px 20px; border-radius: 25px; margin: 10px 0; cursor: pointer; font-weight: bold; width: 100%; }
         .audio-btn:disabled { background: #ccc; cursor: not-allowed; color: #666; }
-        .option { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin: 10px 0; display: flex; align-items: center; cursor: pointer; transition: 0.2s; width: 100%; max-width: 600px; box-sizing: border-box; color: #333; }
+        .option { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin: 10px 0; display: flex; align-items: center; cursor: pointer; transition: 0.2s; width: 100%; max-width: 600px; box-sizing: border-box; }
         .option.active { border: 2px solid var(--primary); background: #e1f5fe; }
+        
         .opt-correct-review { background-color: #d4edda !important; border: 2px solid #28a745 !important; color: #155724 !important; }
         .opt-wrong-review { background-color: #f8d7da !important; border: 2px solid #dc3545 !important; color: #721c24 !important; }
+        
         .opt-num { width: 30px; height: 30px; border: 1px solid #333; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 15px; flex-shrink: 0; color: #333; }
+        .result-container { background: white; border-radius: 15px; padding: 25px; width: 100%; max-width: 500px; text-align: center; color: #333; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .status-badge { font-size: 48px; font-weight: bold; margin-bottom: 10px; }
+        .review-scroll { max-height: 250px; overflow-y: auto; background: #f8f9fa; border-radius: 10px; padding: 10px; text-align: left; margin: 15px 0; border: 1px solid #eee; }
+        .review-line { padding: 8px; border-bottom: 1px solid #e0e0e0; font-size: 14px; }
+        .correct-ans { color: var(--success); font-weight: bold; }
+        .wrong-ans { color: var(--danger); font-weight: bold; }
+        .palette-toggle { position: fixed; right: 20px; bottom: 25px; background: #1a233a; color: white; padding: 15px 20px; cursor: pointer; border-radius: 50px; z-index: 1001; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid var(--primary); font-weight: bold; }
         .side-menu { position: fixed; right: -300px; top: 0; width: 280px; height: 100vh; background: white; box-shadow: -5px 0 15px rgba(0,0,0,0.2); transition: 0.3s; z-index: 1002; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .side-menu.open { right: 0; }
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 25px; }
         .num-btn { padding: 10px 0; border: 1px solid #ddd; text-align: center; border-radius: 5px; cursor: pointer; font-size: 13px; background: #f8f9fa; color: #333; }
         .num-btn.done { background: var(--success); color: white; }
-        .num-btn.current { background: var(--primary); color: white; }
+        .num-btn.current { background: var(--primary); color: white; border: 2px solid #008ba3; }
         #cb-page { background: var(--dark); }
         .cb-img { width: 250px; height: 250px; border-radius: 50%; border: 5px solid white; margin: 20px 0; display: block; margin-left: auto; margin-right: auto; }
-        .palette-toggle { position: fixed; right: 20px; bottom: 25px; background: #1a233a; color: white; padding: 15px 20px; cursor: pointer; border-radius: 50px; z-index: 1001; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 2px solid var(--primary); font-weight: bold; }
+        
+        /* Exit Review Button */
         #exit-review-btn { display: none; position: fixed; left: 20px; bottom: 25px; background: var(--danger); color: white; padding: 15px 20px; cursor: pointer; border-radius: 50px; z-index: 1001; font-size: 14px; font-weight: bold; border: 2px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
     </style>
 </head>
@@ -59,10 +66,11 @@
         <div class="promo-tag">PASS 100%</div>
         <p style="color: #8b949e; font-size: 12px; margin-top: 5px;">EPS Korea Exam Preparation</p>
     </div>
+
     <div class="card">
         <div class="header">UBT Paid Student Login</div>
         <center>
-            <input type="tel" id="user-phone" placeholder="ဖုန်းနံပါတ်ရိုက်ထည့်ပါ (၀၉...)">
+            <input type="tel" id="user-phone" placeholder="မိမိရဲ့ဖုန်းနံပါတ်ကို'0'ဖယ်ပြီးရိုက်ထည့်ပါ (၉...)">
             <select id="user-job">
                 <option>Manufacturing (제조업)</option>
                 <option>Agriculture (농업)</option>
@@ -71,37 +79,13 @@
             </select>
             <button class="btn" id="login-btn" onclick="checkAccess()">VERIFY & START</button>
             <p id="login-msg" style="color:#ff0055; font-size:12px; margin-top:10px;"></p>
+            
             <div class="contact-group">
+                <p style="margin: 5px 0; font-size: 13px; color: #d4af37; font-weight: bold;">[ သင်တန်းအပ်ရန် ဆက်သွယ်ရန် ]</p>
                 <a href="https://t.me/ubtsenterbot" target="_blank" class="contact-btn tg-btn">✈ Telegram Join</a>
                 <a href="tel:09450052637" class="contact-btn ph-btn">📞 09450052637 သို့ ဖုန်းခေါ်ဆိုရန်</a>
             </div>
             <p style="font-size: 12px; color: #58a6ff; cursor: pointer; margin-top: 15px;" onclick="viewResults()">VIEW FINAL RESULTS</p>
-        </center>
-    </div>
-</div>
-
-<div id="payment-page" class="page">
-    <div class="card" style="text-align: center;">
-        <div class="header">ငွေပေးချေရန် (အကောင့်ဖွင့်ရန်)</div>
-        <p style="padding: 10px 20px; font-size: 14px; color: #ccc;">အောက်ပါ KBZPay QR သို့မဟုတ် ဖုန်းနံပါတ်သို့ ငွေလွှဲပေးပါ။</p>
-        <center>
-            <img src="https://lh3.googleusercontent.com/d/18Ctkv2z2_qIaiGtGcJuB4pzvum6QUX-c" class="qr-display" alt="KPay QR">
-            <div class="pay-info">
-                <span style="font-size: 12px; color: var(--primary);">Kpay Phone Number</span><br>
-                <strong style="font-size: 18px; letter-spacing: 1px;">09450052637</strong>
-            </div>
-            
-            <div style="width:85%; text-align:left; margin-top:10px;">
-                <label style="font-size:12px; color:var(--gold);">၁။ သင့်အမည်အပြည့်အစုံ ရိုက်ပါ</label>
-                <input type="text" id="pay-name-input" placeholder="Name" style="width:100%; margin-top:5px;">
-                
-                <label style="font-size:12px; color:var(--gold);">၂။ ငွေလွှဲ Screenshot တင်ပါ</label>
-                <input type="file" id="ss-upload" accept="image/*" style="margin-top:5px; font-size:12px; color:white;">
-            </div>
-
-            <button class="btn" id="send-btn" onclick="submitPayment()">🚀 SEND TO TEACHER</button>
-            <button class="btn" style="background:#2c3e50; margin-top: 10px;" onclick="location.reload()">BACK</button>
-            <p id="upload-status" style="font-size:12px; color:var(--gold); margin-top:10px;"></p>
         </center>
     </div>
 </div>
@@ -148,11 +132,14 @@
         <div id="status-badge" class="status-badge"></div>
         <h2 id="final-score" style="margin: 0;">Score: 0</h2>
         <p id="final-stats"></p>
+        
         <button class="btn" style="background:var(--primary); width: 100%; margin-bottom: 10px;" onclick="enterReview()">REVIEW ANSWERS</button>
+
         <div class="review-scroll" id="review-list"></div>
         <div class="contact-group" style="width: 100%;">
-            <a href="https://t.me/ubtsenterbot" target="_blank" class="contact-btn tg-btn">✈ Telegram Contact</a>
-            <a href="tel:09450052637" class="contact-btn ph-btn">📞 09450052637</a>
+            <p style="margin: 5px 0; font-size: 13px; color: #333; font-weight: bold;">[ အသေးစိတ်စုံစမ်းရန်/သင်တန်းအပ်ရန် ]</p>
+            <a href="https://t.me/ubtsenterbot" target="_blank" class="contact-btn tg-btn">✈ Telegram မှ ဆက်သွယ်ရန်</a>
+            <a href="tel:09450052637" class="contact-btn ph-btn">📞 09450052637 သို့ ဖုန်းခေါ်ဆိုရန်</a>
         </div>
         <button class="btn" style="background:#2c3e50; width: 100%;" onclick="location.reload()">TRY AGAIN</button>
     </div>
@@ -162,8 +149,13 @@
     const apiURL = "https://script.google.com/macros/s/AKfycbyx4aMaqufUOZ6kkJjxcGih8xFgZ-e1y6zcrZj0V79TiW1a9Fjn-0bx44j459KZEQ65/exec";
     let questions = [], current = 0, answers = [], audioLogs = {}, timeLeft = 50 * 60;
     let cbList = [1, 2, 3, 4, 5], cbIdx = 0, cbAnswers = [];
-    let globalPhone = "", isReviewing = false;
-    let cbTimeLeft = 60, cbTimerObj;
+    let globalPhone = "";
+    let isReviewing = false;
+    
+    // Colour Blind Timer Variables
+    let cbTimeLeft = 60; 
+    let cbTimerObj;
+
     const cbKey = { 1: "35", 2: "8", 3: "16", 4: "2", 5: "57" };
 
     function getDeviceId() {
@@ -180,93 +172,25 @@
         const btn = document.getElementById('login-btn');
         const msg = document.getElementById('login-msg');
         if (!phone) return alert("ဖုန်းနံပါတ် ရိုက်ထည့်ပါ");
-        btn.disabled = true; btn.innerText = "Checking...";
+        btn.disabled = true;
+        btn.innerText = "Checking...";
         try {
             const deviceId = getDeviceId();
             const res = await fetch(`${apiURL}?action=checkAccess&phone=${phone}&deviceId=${deviceId}`);
             const result = await res.json();
             if (result.allowed) {
-                globalPhone = phone; startExam(result.name);
+                globalPhone = phone;
+                startExam(result.name);
             } else {
-                if(result.msg.includes("payment_required")) {
-                    document.getElementById('login-page').classList.remove('active-page');
-                    document.getElementById('payment-page').classList.add('active-page');
-                } else {
-                    msg.innerText = result.msg; btn.disabled = false; btn.innerText = "VERIFY & START";
-                }
-            }
-        } catch (e) { alert("Error connecting to server!"); btn.disabled = false; }
-    }
-
-// ၂။ submitPayment Function ကို ဒီအတိုင်း အတိအကျ ပြန်ထည့်ပါ
-function submitPayment() {
-    const name = document.getElementById('pay-name-input').value;
-    const phone = document.getElementById('user-phone').value;
-    const sector = document.getElementById('user-job').value;
-    const fileInput = document.getElementById('ss-upload');
-    const btn = document.getElementById('send-btn');
-    const status = document.getElementById('upload-status');
-
-    if (!name || !fileInput.files[0]) return alert("အမည် နှင့် Screenshot ပုံ ထည့်သွင်းပါ");
-
-    btn.disabled = true;
-    btn.innerText = "Processing Image...";
-
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    
-    reader.onload = function(e) {
-        const img = new Image();
-        img.src = e.target.result;
-        img.onload = function() {
-            // Image Resizing (Size လျှော့ခြင်း)
-            const canvas = document.createElement('canvas');
-            let width = img.width;
-            let height = img.height;
-            const MAX_WIDTH = 800;
-            if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
-            }
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-            
-            const payload = {
-                action: "sendToTelegram",
-                name: name,
-                phone: phone,
-                sector: sector,
-                image: compressedBase64
-            };
-
-            status.innerText = "Sending to Teacher...";
-            
-            // fetch ကို mode: 'cors' ဖြင့် ပို့ခြင်း
-            fetch(apiURL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(payload)
-            })
-            .then(res => {
-                // အောင်မြင်မှသာ alert ပြရန်
-                alert("ငွေလွှဲပြေစာ ပို့ပြီးပါပြီ။ ဆရာမှ အကောင့်ဖွင့်ပေးသည်အထိ ခေတ္တစောင့်ပေးပါ။");
-                location.reload();
-            })
-            .catch(err => {
-                console.error(err);
-                alert("ပို့ဆောင်မှု မအောင်မြင်ပါ။ Error: " + err.message);
+                msg.innerText = result.msg;
                 btn.disabled = false;
-                btn.innerText = "🚀 SEND TO TEACHER";
-            });
-        };
-    };
-    reader.readAsDataURL(file);
-}
-
+                btn.innerText = "VERIFY & START";
+            }
+        } catch (e) {
+            alert("Error connecting to server!");
+            btn.disabled = false;
+        }
+    }
 
     async function startExam(name) {
         document.getElementById('login-page').classList.remove('active-page');
@@ -288,7 +212,8 @@ function submitPayment() {
             });
             answers = new Array(questions.length).fill(null);
             cbList = cbList.sort(() => Math.random() - 0.5);
-            renderQ(); startTimer();
+            renderQ();
+            startTimer();
         } catch(e) { alert("Data Fetch Error!"); }
     }
 
@@ -307,16 +232,28 @@ function submitPayment() {
         } else { aBox.innerHTML = ""; }
         const img = document.getElementById('q-img');
         if(q.img) { img.src = q.img; img.style.display = "block"; } else { img.style.display = "none"; }
-        const optDiv = document.getElementById('options-container'); optDiv.innerHTML = "";
+        
+        const optDiv = document.getElementById('options-container');
+        optDiv.innerHTML = "";
+
         q.shuffledOptions.forEach((opt, i) => {
             let content = "";
             if (opt.toString().match(/\.(jpg|jpeg|png)$/i)) { content = `<img src="${opt}" style="height:70px; border-radius:5px;">`; }
             else if (opt.toString().match(/\.mp3$/i)) {
                 let optId = btoa(opt).substring(0, 15);
                 let count = audioLogs[optId] || 0;
-                content = `<button class="audio-btn" style="margin:0; width:auto; font-size:12px; padding:8px 15px;" onclick="event.stopPropagation(); playAudio('${opt}', '${optId}')" ${count >= 2 ? 'disabled' : ''}>🎧 Audio (${count}/2)</button>`;
+                content = `<button class="audio-btn" style="margin:0; width:auto; font-size:12px; padding:8px 15px;" onclick="event.stopPropagation(); playAudio('${opt}', '${optId}')" ${count >= 2 ? 'disabled' : ''}>🎧 ${count >= 2 ? 'LIMIT' : 'Audio (' + count + '/2)'}</button>`;
             } else { content = `<span>${opt}</span>`; }
-            let reviewClass = (isReviewing) ? (i === q.newAnsIndex ? "opt-correct-review" : (answers[current] === i ? "opt-wrong-review" : "")) : "";
+
+            let reviewClass = "";
+            if (isReviewing) {
+                if (i === q.newAnsIndex) {
+                    reviewClass = "opt-correct-review"; 
+                } else if (answers[current] === i && i !== q.newAnsIndex) {
+                    reviewClass = "opt-wrong-review";
+                }
+            }
+
             optDiv.innerHTML += `<div class="option ${answers[current]===i && !isReviewing ?'active':''} ${reviewClass}" onclick="${isReviewing ? '' : `setAns(${i})`}"><div class="opt-num">${i+1}</div><div>${content}</div></div>`;
         });
         updatePalette();
@@ -327,8 +264,10 @@ function submitPayment() {
     function nextQ() { if(current < questions.length-1) { current++; renderQ(); } }
     function prevQ() { if(current > 0) { current--; renderQ(); } }
     function toggleMenu() { document.getElementById('side-menu').classList.toggle('open'); }
+    
     function updatePalette() {
-        const grid = document.getElementById('exam-grid'); grid.innerHTML = "";
+        const grid = document.getElementById('exam-grid');
+        grid.innerHTML = "";
         questions.forEach((_, i) => {
             const btn = document.createElement('div');
             btn.className = `num-btn ${answers[i] !== null ? 'done' : ''} ${i === current ? 'current' : ''}`;
@@ -337,24 +276,118 @@ function submitPayment() {
             grid.appendChild(btn);
         });
     }
+    
     function startTimer() { const timerObj = setInterval(() => { if(timeLeft <= 0 || isReviewing) { clearInterval(timerObj); if(!isReviewing) finishPartOne(); } timeLeft--; let m = Math.floor(timeLeft/60), s = timeLeft%60; document.getElementById('timer').innerText = `${m}:${s<10?'0':''}${s}`; }, 1000); }
     function finishPartOne() { document.getElementById('exam-page').classList.remove('active-page'); document.getElementById('cb-page').classList.add('active-page'); loadCB(); }
-    function loadCB() { document.getElementById('cb-q-no').innerText = `Plate ${cbIdx + 1} of 5`; document.getElementById('cb-display-img').src = `cb${cbList[cbIdx]}.jpg`; document.getElementById('cb-input').value = ""; if (cbIdx === 0) startCBTimer(); }
-    function startCBTimer() { if (cbTimerObj) clearInterval(cbTimerObj); cbTimerObj = setInterval(() => { if (cbTimeLeft <= 0) { clearInterval(cbTimerObj); processResults(); return; } cbTimeLeft--; let m = Math.floor(cbTimeLeft / 60), s = cbTimeLeft % 60; document.getElementById('cb-q-no').innerText = `Plate ${cbIdx + 1} (Time: ${m}:${s<10?'0':''}${s})`; }, 1000); }
-    function nextCB() { const val = document.getElementById('cb-input').value; cbAnswers.push({ plate: cbList[cbIdx], userAns: val }); if(cbIdx < 4) { cbIdx++; loadCB(); } else { clearInterval(cbTimerObj); processResults(); } }
+    
+    function loadCB() { 
+        document.getElementById('cb-q-no').innerText = `Plate ${cbIdx + 1} of 5`; 
+        document.getElementById('cb-display-img').src = `cb${cbList[cbIdx]}.jpg`; 
+        document.getElementById('cb-input').value = ""; 
+        
+        if (cbIdx === 0) startCBTimer();
+    }
+    
+    function startCBTimer() {
+        if (cbTimerObj) clearInterval(cbTimerObj);
+        cbTimerObj = setInterval(() => {
+            if (cbTimeLeft <= 0) {
+                clearInterval(cbTimerObj);
+                alert("Colour Blind Test အတွက် အချိန်ကုန်ဆုံးသွားပါပြီ။");
+                processResults();
+                return;
+            }
+            cbTimeLeft--;
+            let m = Math.floor(cbTimeLeft / 60);
+            let s = cbTimeLeft % 60;
+            document.getElementById('cb-q-no').innerText = `Plate ${cbIdx + 1} of 5 (Time: ${m}:${s < 10 ? '0' : ''}${s})`;
+            if (cbTimeLeft <= 10) document.getElementById('cb-q-no').style.color = "var(--danger)";
+        }, 1000);
+    }
+
+    function nextCB() {
+        const val = document.getElementById('cb-input').value;
+        cbAnswers.push({ plate: cbList[cbIdx], userAns: val });
+        if(cbIdx < 4) {
+            cbIdx++;
+            loadCB();
+        } else { 
+            clearInterval(cbTimerObj);
+            processResults(); 
+        }
+    }
+
     async function processResults() {
-        let score = 0, reviewHTML = "<h3>UBT Review</h3>";
-        questions.forEach((q, i) => { const isCorrect = answers[i] === q.newAnsIndex; if(isCorrect) score += 2.5; reviewHTML += `<div class="review-line" onclick="jumpToQ(${i})">Q${i+1}: <span class="${isCorrect?'correct-ans':'wrong-ans'}">${isCorrect?'✓':'✗'}</span></div>`; });
-        document.getElementById('cb-page').classList.remove('active-page'); document.getElementById('result-page').classList.add('active-page');
-        document.getElementById('final-score').innerText = `Score: ${score}`; document.getElementById('status-badge').innerText = score >= 95 ? "PASS" : "FAIL";
+        let score = 0, reviewHTML = "<h3>UBT Questions Review</h3>";
+        questions.forEach((q, i) => {
+            const isCorrect = answers[i] === q.newAnsIndex;
+            if(isCorrect) score += 2.5;
+            reviewHTML += `<div class="review-line" style="cursor:pointer;" onclick="jumpToQ(${i})">Q${i+1}: <span class="${isCorrect?'correct-ans':'wrong-ans'}">${isCorrect?'✓ Correct':'✗ Wrong'}</span></div>`;
+        });
+
+        reviewHTML += "<h3>Colour Blind Test Review</h3>";
+        let cbCorrectCount = 0;
+        cbAnswers.forEach((ans, i) => {
+            const isCBCorrect = ans.userAns == cbKey[ans.plate];
+            if(isCBCorrect) cbCorrectCount++;
+            reviewHTML += `<div class="review-line">Plate ${i+1}: <span class="${isCBCorrect?'correct-ans':'wrong-ans'}">${isCBCorrect?'✓ Pass':'✗ Fail'}</span> (Correct: ${cbKey[ans.plate]})</div>`;
+        });
+
+        document.getElementById('cb-page').classList.remove('active-page');
+        document.getElementById('result-page').classList.add('active-page');
+        const badge = document.getElementById('status-badge');
+        document.getElementById('final-score').innerText = `Score: ${score}`;
+        document.getElementById('final-stats').innerText = `UBT: ${score/2.5}/${questions.length} | CB: ${cbCorrectCount}/5`;
         document.getElementById('review-list').innerHTML = reviewHTML;
-        const data = { name: document.getElementById('display-name').innerText, phone: globalPhone, sector: document.getElementById('user-job').value, score: score, cbScore: "Checked" };
+
+        if(score >= 95 && cbCorrectCount === 5) { 
+            badge.innerText = "PASS"; badge.style.color = "var(--success)"; 
+        } else { 
+            badge.innerText = "FAIL"; badge.style.color = "var(--danger)"; 
+        }
+        
+        const data = { name: document.getElementById('display-name').innerText, phone: globalPhone, sector: document.getElementById('user-job').value, score: score, cbScore: `${cbCorrectCount}/5` };
         fetch(apiURL, { method: "POST", body: JSON.stringify(data) });
     }
-    function enterReview() { isReviewing = true; document.getElementById('result-page').classList.remove('active-page'); document.getElementById('exam-page').classList.add('active-page'); document.getElementById('exit-review-btn').style.display = "block"; document.getElementById('finish-btn').style.display = "none"; current = 0; renderQ(); }
-    function exitReview() { isReviewing = false; document.getElementById('exam-page').classList.remove('active-page'); document.getElementById('result-page').classList.add('active-page'); document.getElementById('exit-review-btn').style.display = "none"; }
-    function jumpToQ(i) { enterReview(); current = i; renderQ(); }
-    async function viewResults() { const name = prompt("အမည်ရိုက်ပါ:"); if(name) { try { const res = await fetch(`${apiURL}?viewResult=true&name=${name}`); const data = await res.json(); if(data.length > 0) alert(`${name} ၏ ရမှတ်: ${data[data.length-1][4]}`); else alert("မရှိပါ"); } catch(e) { alert("Error"); } } }
+
+    function enterReview() {
+        isReviewing = true;
+        document.getElementById('result-page').classList.remove('active-page');
+        document.getElementById('exam-page').classList.add('active-page');
+        document.getElementById('exit-review-btn').style.display = "block";
+        document.getElementById('finish-btn').style.display = "none";
+        document.getElementById('timer').innerText = "REVIEW MODE";
+        current = 0;
+        renderQ();
+    }
+
+    function exitReview() {
+        isReviewing = false;
+        document.getElementById('exam-page').classList.remove('active-page');
+        document.getElementById('result-page').classList.add('active-page');
+        document.getElementById('exit-review-btn').style.display = "none";
+        document.getElementById('finish-btn').style.display = "block";
+    }
+
+    function jumpToQ(index) {
+        enterReview();
+        current = index;
+        renderQ();
+    }
+
+    async function viewResults() {
+        const name = prompt("အမည်ရိုက်ပါ:");
+        if(name) {
+            try {
+                const res = await fetch(`${apiURL}?viewResult=true&name=${name}`);
+                const data = await res.json();
+                if(data.length > 0) {
+                    const lastEntry = data[data.length - 1];
+                    alert(`${name} ၏ နောက်ဆုံးရမှတ်မှာ: ${lastEntry[4]} ဖြစ်ပါသည်။`);
+                } else { alert("ဒီအမည်နဲ့ ဖြေဆိုထားတဲ့ မှတ်တမ်းမရှိသေးပါဘူး။"); }
+            } catch(e) { alert("အချက်အလက် ရှာဖွေရာတွင် အမှားအယွင်းရှိနေပါသည်။"); }
+        }
+    }
 </script>
 </body>
-                </html>
+            </html>
