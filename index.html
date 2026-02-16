@@ -357,4 +357,4 @@ function submitPayment() {
     async function viewResults() { const name = prompt("အမည်ရိုက်ပါ:"); if(name) { try { const res = await fetch(`${apiURL}?viewResult=true&name=${name}`); const data = await res.json(); if(data.length > 0) alert(`${name} ၏ ရမှတ်: ${data[data.length-1][4]}`); else alert("မရှိပါ"); } catch(e) { alert("Error"); } } }
 </script>
 </body>
-              </html>
+                </html>
