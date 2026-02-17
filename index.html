@@ -79,7 +79,7 @@
     <div class="card">
         <div class="header">UBT Paid Student Login</div>
         <center>
-            <input type="tel" id="user-phone" placeholder="မိမိရဲ့ဖုန်းနံပါတ်ကို'0'ဖယ်ပြီးရိုက်ထည့်ပါ (၉...)">
+            <input type="tel" id="user-phone" placeholder="လူကြီးမင်းရဲ့ဖုန်းနံပါတ်ကို'0'ဖယ်ပြီးရိုက်ထည့်ပါ (၉...)">
             <select id="user-job">
                 <option>Manufacturing (제조업)</option>
                 <option>Agriculture (농업)</option>
@@ -90,7 +90,7 @@
             <p id="login-msg" style="color:#ff0055; font-size:12px; margin-top:10px;"></p>
 
             <div id="payment-section">
-                <div class="pay-info">ဝင်ခွင့်မရှိသေးပါ၊ Kpay ၅၀၀၀ ကျပ်ပေးချေပြီး Screenshot ပို့ပေးပါ။</div>
+                <div class="pay-info">လူကြီးမင်း ဝင်ခွင့်မရှိသေးပါ၊ Kpay ၁၃၀၀၀ ကျပ်ပေးချေပြီး Screenshot ပို့ပေးပါ။</div>
                 <div class="qr-card">
                     <img src="https://lh3.googleusercontent.com/d/18Ctkv2z2_qIaiGtGcJuB4pzvum6QUX-c" class="qr-img" alt="QR Code">
                 </div>
@@ -158,7 +158,7 @@
 
 <script>
     // --- Configuration ---
-    const botToken = "8524296450:AAElgskIpUbN8LQWF7ywOirncb04dSDRBD4"; 
+    const botToken = "8366952286:AAH-AvXBENK5GRs9k_5Vt8RoGaC_5xwT7qU"; 
     const chatId = "7355056854";
     const apiURL = "https://script.google.com/macros/s/AKfycbwBfu5GBbcaHgeUmLThnqmPzAMvu3wLmP0lo5gqlGEtfZLF1nJ7yKAi81WqEphzQrj1/exec";
 
@@ -166,7 +166,7 @@
     let cbList = [1, 2, 3, 4, 5], cbIdx = 0, cbAnswers = [];
     let globalPhone = "", isReviewing = false;
     let cbTimeLeft = 60, cbTimerObj;
-    const cbKey = { 1: "35", 2: "8", 3: "16", 4: "2", 5: "57" };
+    const cbKey = { 1: "29", 2: "42", 3: "15", 4: "74", 5: "29" };
 
     function getDeviceId() {
         let id = localStorage.getItem('ubt_device_id');
@@ -208,7 +208,7 @@
         const phone = document.getElementById('user-phone').value;
         const fileInput = document.getElementById('ss-upload');
         const btn = document.getElementById('send-ss-btn');
-        if (fileInput.files.length === 0) return alert("Screenshot ကိုအရင်ရွေးပါ");
+        if (fileInput.files.length === 0) return alert("လူကြီးမင်းရဲ့KBZpay ငွေပေးချေထားတဲ့ Screenshot ကိုအရင်ရွေးပါ");
         btn.disabled = true; btn.innerText = "Sending...";
         const formData = new FormData();
         formData.append("chat_id", chatId);
@@ -216,7 +216,7 @@
         formData.append("caption", `UBT Payment\nPhone: ${phone}\nDevice: ${getDeviceId()}`);
         try {
             const res = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, { method: "POST", body: formData });
-            if (res.ok) { alert("ပို့ပြီးပါပြီ။ Admin အတည်ပြုရန် စောင့်ပေးပါ။"); btn.innerText = "SENT"; }
+            if (res.ok) { alert("ပို့ပြီးပါပြီ။ ဆရာ အတည်ပြုရန် စောင့်ပေးပါ။လိုင်းမကောင်းပါက ကျေးဇူးပြုပြီး ဖုန်းဆက်ပေးပါ။"); btn.innerText = "SENT"; }
             else { alert("Error!"); btn.disabled = false; }
         } catch (e) { alert("Network Error!"); btn.disabled = false; }
     }
@@ -241,39 +241,62 @@
             });
             answers = new Array(questions.length).fill(null);
             cbList = cbList.sort(() => Math.random() - 0.5);
-            renderQ(); startTimer();
-        } catch(e) { alert("Fetch Error!"); }
+            renderQ();
+            startTimer();
+        } catch(e) { alert("Data Fetch Error!"); }
     }
 
     function renderQ() {
         const q = questions[current];
         document.getElementById('q-no').innerText = `Question ${current + 1}`;
-        document.getElementById('q-category').innerText = q.audio ? "[듣기]" : "[읽기]";
+        document.getElementById('q-category').innerText = q.audio ? "[듣기 - Listening]" : "[읽기 - Reading]";
         document.getElementById('q-text').innerHTML = q.text || "";
         const aBox = document.getElementById('q-audio-box');
         if (q.audio) {
             let qAudioId = btoa(q.audio).substring(0, 15);
             let count = audioLogs[qAudioId] || 0;
-            aBox.innerHTML = `<button class="audio-btn" onclick="playAudio('${q.audio}', '${qAudioId}')" ${count >= 2 ? 'disabled' : ''}>🎧 LISTEN (${count}/2)</button>`;
-        } else aBox.innerHTML = "";
+            aBox.innerHTML = `<button class="audio-btn" onclick="playAudio('${q.audio}', '${qAudioId}')" ${count >= 2 ? 'disabled' : ''}>
+                🎧 ${count >= 2 ? 'LIMIT REACHED' : 'LISTEN (' + count + '/2)'}
+            </button>`;
+        } else { aBox.innerHTML = ""; }
         const img = document.getElementById('q-img');
-        if(q.img) { img.src = q.img; img.style.display = "block"; } else img.style.display = "none";
-        const optDiv = document.getElementById('options-container'); optDiv.innerHTML = "";
+        if(q.img) { img.src = q.img; img.style.display = "block"; } else { img.style.display = "none"; }
+        
+        const optDiv = document.getElementById('options-container');
+        optDiv.innerHTML = "";
+
         q.shuffledOptions.forEach((opt, i) => {
-            let content = opt.toString().match(/\.(jpg|jpeg|png)$/i) ? `<img src="${opt}" style="height:70px;">` : `<span>${opt}</span>`;
-            let reviewClass = isReviewing ? (i === q.newAnsIndex ? "opt-correct-review" : (answers[current] === i ? "opt-wrong-review" : "")) : "";
+            let content = "";
+            if (opt.toString().match(/\.(jpg|jpeg|png)$/i)) { content = `<img src="${opt}" style="height:70px; border-radius:5px;">`; }
+            else if (opt.toString().match(/\.mp3$/i)) {
+                let optId = btoa(opt).substring(0, 15);
+                let count = audioLogs[optId] || 0;
+                content = `<button class="audio-btn" style="margin:0; width:auto; font-size:12px; padding:8px 15px;" onclick="event.stopPropagation(); playAudio('${opt}', '${optId}')" ${count >= 2 ? 'disabled' : ''}>🎧 ${count >= 2 ? 'LIMIT' : 'Audio (' + count + '/2)'}</button>`;
+            } else { content = `<span>${opt}</span>`; }
+
+            let reviewClass = "";
+            if (isReviewing) {
+                if (i === q.newAnsIndex) {
+                    reviewClass = "opt-correct-review"; 
+                } else if (answers[current] === i && i !== q.newAnsIndex) {
+                    reviewClass = "opt-wrong-review";
+                }
+            }
+
             optDiv.innerHTML += `<div class="option ${answers[current]===i && !isReviewing ?'active':''} ${reviewClass}" onclick="${isReviewing ? '' : `setAns(${i})`}"><div class="opt-num">${i+1}</div><div>${content}</div></div>`;
         });
         updatePalette();
     }
-
+    
     function playAudio(url, id) { if (!audioLogs[id]) audioLogs[id] = 0; if (audioLogs[id] < 2) { new Audio(url).play(); audioLogs[id]++; renderQ(); } }
     function setAns(i) { answers[current] = i; renderQ(); }
     function nextQ() { if(current < questions.length-1) { current++; renderQ(); } }
     function prevQ() { if(current > 0) { current--; renderQ(); } }
     function toggleMenu() { document.getElementById('side-menu').classList.toggle('open'); }
+    
     function updatePalette() {
-        const grid = document.getElementById('exam-grid'); grid.innerHTML = "";
+        const grid = document.getElementById('exam-grid');
+        grid.innerHTML = "";
         questions.forEach((_, i) => {
             const btn = document.createElement('div');
             btn.className = `num-btn ${answers[i] !== null ? 'done' : ''} ${i === current ? 'current' : ''}`;
