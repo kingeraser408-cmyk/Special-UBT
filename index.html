@@ -284,32 +284,114 @@
     }
     function startTimer() { const timerObj = setInterval(() => { if(timeLeft <= 0 || isReviewing) { clearInterval(timerObj); if(!isReviewing) finishPartOne(); } timeLeft--; let m = Math.floor(timeLeft/60), s = timeLeft%60; document.getElementById('timer').innerText = `${m}:${s<10?'0':''}${s}`; }, 1000); }
     function finishPartOne() { document.getElementById('exam-page').classList.remove('active-page'); document.getElementById('cb-page').classList.add('active-page'); loadCB(); }
+    
     function loadCB() { 
         document.getElementById('cb-q-no').innerText = `Plate ${cbIdx + 1} of 5`; 
         document.getElementById('cb-display-img').src = `cb${cbList[cbIdx]}.jpg`; 
+        document.getElementById('cb-input').value = ""; 
+        
         if (cbIdx === 0) startCBTimer();
     }
+    
     function startCBTimer() {
+        if (cbTimerObj) clearInterval(cbTimerObj);
         cbTimerObj = setInterval(() => {
-            if (cbTimeLeft <= 0) { clearInterval(cbTimerObj); processResults(); return; }
+            if (cbTimeLeft <= 0) {
+                clearInterval(cbTimerObj);
+                alert("Colour Blind Test အတွက် အချိန်ကုန်ဆုံးသွားပါပြီ။");
+                processResults();
+                return;
+            }
             cbTimeLeft--;
+            let m = Math.floor(cbTimeLeft / 60);
+            let s = cbTimeLeft % 60;
+            document.getElementById('cb-q-no').innerText = `Plate ${cbIdx + 1} of 5 (Time: ${m}:${s < 10 ? '0' : ''}${s})`;
+            if (cbTimeLeft <= 10) document.getElementById('cb-q-no').style.color = "var(--danger)";
         }, 1000);
     }
+
     function nextCB() {
-        cbAnswers.push({ plate: cbList[cbIdx], userAns: document.getElementById('cb-input').value });
-        if(cbIdx < 4) { cbIdx++; loadCB(); } else { clearInterval(cbTimerObj); processResults(); }
+        const val = document.getElementById('cb-input').value;
+        cbAnswers.push({ plate: cbList[cbIdx], userAns: val });
+        if(cbIdx < 4) {
+            cbIdx++;
+            loadCB();
+        } else { 
+            clearInterval(cbTimerObj);
+            processResults(); 
+        }
     }
+
     async function processResults() {
-        let score = 0, reviewHTML = "";
-        questions.forEach((q, i) => { if(answers[i] === q.newAnsIndex) score += 2.5; });
+        let score = 0, reviewHTML = "<h3>UBT Questions Review</h3>";
+        questions.forEach((q, i) => {
+            const isCorrect = answers[i] === q.newAnsIndex;
+            if(isCorrect) score += 2.5;
+            reviewHTML += `<div class="review-line" style="cursor:pointer;" onclick="jumpToQ(${i})">Q${i+1}: <span class="${isCorrect?'correct-ans':'wrong-ans'}">${isCorrect?'✓ Correct':'✗ Wrong'}</span></div>`;
+        });
+
+        reviewHTML += "<h3>Colour Blind Test Review</h3>";
+        let cbCorrectCount = 0;
+        cbAnswers.forEach((ans, i) => {
+            const isCBCorrect = ans.userAns == cbKey[ans.plate];
+            if(isCBCorrect) cbCorrectCount++;
+            reviewHTML += `<div class="review-line">Plate ${i+1}: <span class="${isCBCorrect?'correct-ans':'wrong-ans'}">${isCBCorrect?'✓ Pass':'✗ Fail'}</span> (Correct: ${cbKey[ans.plate]})</div>`;
+        });
+
         document.getElementById('cb-page').classList.remove('active-page');
         document.getElementById('result-page').classList.add('active-page');
+        const badge = document.getElementById('status-badge');
         document.getElementById('final-score').innerText = `Score: ${score}`;
-        const data = { name: document.getElementById('display-name').innerText, phone: globalPhone, score: score };
+        document.getElementById('final-stats').innerText = `UBT: ${score/2.5}/${questions.length} | CB: ${cbCorrectCount}/5`;
+        document.getElementById('review-list').innerHTML = reviewHTML;
+
+        if(score >= 95 && cbCorrectCount === 5) { 
+            badge.innerText = "PASS"; badge.style.color = "var(--success)"; 
+        } else { 
+            badge.innerText = "FAIL"; badge.style.color = "var(--danger)"; 
+        }
+        
+        const data = { name: document.getElementById('display-name').innerText, phone: globalPhone, sector: document.getElementById('user-job').value, score: score, cbScore: `${cbCorrectCount}/5` };
         fetch(apiURL, { method: "POST", body: JSON.stringify(data) });
     }
-    function enterReview() { isReviewing = true; document.getElementById('result-page').classList.remove('active-page'); document.getElementById('exam-page').classList.add('active-page'); document.getElementById('exit-review-btn').style.display = "block"; current = 0; renderQ(); }
-    function exitReview() { location.reload(); }
+
+    function enterReview() {
+        isReviewing = true;
+        document.getElementById('result-page').classList.remove('active-page');
+        document.getElementById('exam-page').classList.add('active-page');
+        document.getElementById('exit-review-btn').style.display = "block";
+        document.getElementById('finish-btn').style.display = "none";
+        document.getElementById('timer').innerText = "REVIEW MODE";
+        current = 0;
+        renderQ();
+    }
+    function exitReview() {
+        isReviewing = false;
+        document.getElementById('exam-page').classList.remove('active-page');
+        document.getElementById('result-page').classList.add('active-page');
+        document.getElementById('exit-review-btn').style.display = "none";
+        document.getElementById('finish-btn').style.display = "block";
+    }
+
+    function jumpToQ(index) {
+        enterReview();
+        current = index;
+        renderQ();
+    }
+
+    async function viewResults() {
+        const name = prompt("အမည်ရိုက်ပါ:");
+        if(name) {
+            try {
+                const res = await fetch(`${apiURL}?viewResult=true&name=${name}`);
+                const data = await res.json();
+                if(data.length > 0) {
+                    const lastEntry = data[data.length - 1];
+                    alert(`${name} ၏ နောက်ဆုံးရမှတ်မှာ: ${lastEntry[4]} ဖြစ်ပါသည်။`);
+                } else { alert("ဒီအမည်နဲ့ ဖြေဆိုထားတဲ့ မှတ်တမ်းမရှိသေးပါဘူး။"); }
+            } catch(e) { alert("အချက်အလက် ရှာဖွေရာတွင် အမှားအယွင်းရှိနေပါသည်။"); }
+        }
+    }
 </script>
 </body>
-            </html>
+    </html>
