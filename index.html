@@ -93,7 +93,7 @@
                 <div class="pay-info">လူကြီးမင်း ဝင်ခွင့်မရှိသေးပါ။အောက်မှာ ပြထားတဲ့ KBZpay QR codeကို scan ဖတ်ပြီး ၁၃၀၀၀ ကျပ်ပေးချေပြီး Screenshot ပို့ပေးပါ။ဖုန်းတစ်လုံးဘဲ ရှိသူများ scanဖတ်လို့ အဆင်ပြေအောင် အောက်မှာ ဖော်ပြထားသော Kpay 'QR'ကို ဖုန်းထဲသို့ downloadလုပ်ပြီး KBZpay appကို ဖွင့်ပြီး scanကိုနှိပ် ဓာတ်ပုံအယ်လ်ဘမ်မှ ၁၃၀၀၀ကျပ် Kpay QRကို ရွေးပြီး ငွေပေးချေပေးပါ။scanဖတ်လို့ အဆင်မပြေပါက အောက်မှာ ပြထားတဲ့ KBZpay ဖုန်းနံပါတ် 09450052637သို့ ငွေလွှဲပေးပြီး ငွေပေချေပြီးသော မှတ်တမ်းပို့ပေးပါ။</div>
                 <div class="qr-card">
                     <img id="qr-to-download" src="QR.png" class="qr-img" alt="QR Code">
-                    <a id="qr-download-link" href="#" download="QR.png" class="download-btn" onclick="downloadQR()">
+                    <a id="qr-download-link" href="#" download="KBZPay_QR.png" class="download-btn" onclick="downloadQR()">
                         📥 Save QR to Phone
                     </a>
                 </div>
@@ -179,7 +179,14 @@
     let cbTimeLeft = 60, cbTimerObj;
     const cbKey = { 1: "29", 2: "42", 3: "15", 4: "74", 5: "29" };
 
-    function getDeviceId() {
+// Function to handle QR Download
+    function downloadQR() {
+        const qrImage = document.getElementById('qr-to-download');
+        const downloadLink = document.getElementById('qr-download-link');
+        downloadLink.href = qrImage.src;
+    }
+    
+function getDeviceId() {
         let id = localStorage.getItem('ubt_device_id');
         if (!id) {
             id = 'dev-' + Math.random().toString(36).substr(2, 9) + Date.now();
