@@ -22,9 +22,9 @@
         
         /* Payment Section Styling */
         #payment-section { display: none; margin-top: 20px; width: 85%; border-top: 1px dashed #555; padding-top: 20px; }
-        .qr-card { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; flex-direction: column; align-items: center; }
-        .qr-img { width: 200px; height: 200px; object-fit: contain; }
-        .pay-info { font-size: 13px; color: var(--gold); margin-bottom: 15px; line-height: 1.5; text-align: justify; }
+        .qr-card { background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+        .qr-img { width: 180px; height: 180px; object-fit: contain; }
+        .pay-info { font-size: 14px; color: var(--gold); margin-bottom: 15px; line-height: 1.5; }
         .download-btn { background: var(--kbz); color: white; padding: 10px 15px; border-radius: 5px; font-size: 12px; margin-top: 10px; cursor: pointer; border: none; font-weight: bold; display: flex; align-items: center; gap: 5px; text-decoration: none; }
 
         .contact-group { width: 85%; margin: 15px auto; display: flex; flex-direction: column; gap: 8px; }
@@ -91,11 +91,11 @@
             <p id="login-msg" style="color:#ff0055; font-size:12px; margin-top:10px;"></p>
 
             <div id="payment-section">
-                <div class="pay-info">လူကြီးမင်း ဝင်ခွင့်မရှိသေးပါ။အောက်မှာ ပြထားတဲ့ KBZpay QR codeကို scan ဖတ်ပြီး ၁၃၀၀၀ ကျပ်ပေးချေပြီး Screenshot ပို့ပေးပါ။ဖုန်းတစ်လုံးဘဲ ရှိသူများ scanဖတ်လို့ အဆင်ပြေအောင် အောက်မှာ ဖော်ပြထားသော Kpay 'QR'ကို ဖုန်းထဲသို့ downloadလုပ်ပြီး KBZpay appကို ဖွင့်ပြီး scanကိုနှိပ် ဓာတ်ပုံအယ်လ်ဘမ်မှ ၁၃၀၀၀ကျပ် Kpay QRကို ရွေးပြီး ငွေပေးချေပေးပါ။scanဖတ်လို့ အဆင်မပြေပါက အောက်မှာ ပြထားတဲ့ KBZpay ဖုန်းနံပါတ် 09450052637သို့ ငွေလွှဲပေးပြီး ငွေပေချေပြီးသော မှတ်တမ်းပို့ပေးပါ။</div>
+                <div class="pay-info">လူကြီးမင်း ဝင်ခွင့်မရှိသေးပါ။ အောက်ပါ KBZpay QR code ကို သိမ်းဆည်း (သို့မဟုတ်) Scan ဖတ်ပြီး ၁၃၀၀၀ ကျပ်ပေးချေပါ။ ငွေလွှဲပြီးပါက Screenshot ကို အောက်တွင် ပေးပို့ပေးပါ။</div>
                 <div class="qr-card">
                     <img id="qr-to-download" src="QR.png" class="qr-img" alt="QR Code">
                     <a id="qr-download-link" href="#" download="KBZPay_QR.png" class="download-btn" onclick="downloadQR()">
-      📥💰 Save QR to Phone
+  📥💰 Save QR to Phone
                     </a>
                 </div>
                 <p style="color:var(--gold); font-weight:bold;">KPay No: 09450052637</p>
@@ -435,4 +435,4 @@ function getDeviceId() {
     }
 </script>
 </body>
-                        </html>
+    </html>
