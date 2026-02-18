@@ -93,7 +93,7 @@
             <div id="payment-section">
                 <div class="pay-info">လူကြီးမင်း ဝင်ခွင့်မရှိသေးပါ။ အောက်ပါ KBZpay QR code ကို သိမ်းဆည်း (သို့မဟုတ်) Scan ဖတ်ပြီး ၁၃၀၀၀ ကျပ်ပေးချေပါ။ ငွေလွှဲပြီးပါက Screenshot ကို အောက်တွင် ပေးပို့ပေးပါ။</div>
                 <div class="qr-card">
-                    <img id="qr-to-download" src="QR.png" class="qr-img" alt="QR Code">
+                    <img id="QR.png" class="qr-img" alt="QR Code">
                     <a id="qr-download-link" href="#" download="KBZPay_QR.png" class="download-btn" onclick="downloadQR()">
                         📥 Save QR to Phone
                     </a>
@@ -199,7 +199,7 @@
         const msg = document.getElementById('login-msg');
         const paySection = document.getElementById('payment-section');
 
-        if (!phone) return alert("လူကြီးမင်းရဲ့ ငွေပေးချေခဲ့တဲ့ဖုန်းနံပါတ်ကို '0'ဖယ်ပြီး 9ကနေ ရိုက်ထည့်ပါ");
+        if (!phone) return alert("ဖုန်းနံပါတ် 9 ကနေ စရိုက်ပေးပါ");
         btn.disabled = true;
         btn.innerText = "Checking...";
         paySection.style.display = "none";
@@ -209,7 +209,8 @@
             const res = await fetch(`${apiURL}?action=checkAccess&phone=${phone}&deviceId=${deviceId}`);
             const result = await res.json();
             if (result.allowed) {
-                (result.name);
+                globalPhone = phone;
+                startExam(result.name);
             } else {
                 msg.innerText = result.msg;
                 btn.disabled = false;
@@ -223,7 +224,7 @@
         const phone = document.getElementById('user-phone').value;
         const fileInput = document.getElementById('ss-upload');
         const btn = document.getElementById('send-ss-btn');
-        if (fileInput.files.length === 0) return alert("လူကြီးမင်းရဲ့KBZpay ငွေပေးချေထားတဲ့ Screenshot ကိုအရင်ရွေးပါ");
+        if (fileInput.files.length === 0) return alert("Screenshot ကိုအရင်ရွေးပါ");
         btn.disabled = true; btn.innerText = "Sending...";
         const formData = new FormData();
         formData.append("chat_id", chatId);
@@ -231,7 +232,7 @@
         formData.append("caption", `UBT Payment\nPhone: ${phone}\nDevice: ${getDeviceId()}`);
         try {
             const res = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, { method: "POST", body: formData });
-            if (res.ok) { alert("ပို့ပြီးပါပြီ။ ဆရာ အတည်ပြုရန် စောင့်ပေးပါ။လိုင်းမကောင်းပါက ကျေးဇူးပြုပြီး ဖုန်းဆက်ပေးပါ။"); btn.innerText = "SENT"; }
+            if (res.ok) { alert("ပို့ပြီးပါပြီ။ အတည်ပြုရန် စောင့်ပေးပါ။"); btn.innerText = "SENT"; }
             else { alert("Error!"); btn.disabled = false; }
         } catch (e) { alert("Network Error!"); btn.disabled = false; }
     }
@@ -270,34 +271,16 @@
         if (q.audio) {
             let qAudioId = btoa(q.audio).substring(0, 15);
             let count = audioLogs[qAudioId] || 0;
-            aBox.innerHTML = `<button class="audio-btn" onclick="playAudio('${q.audio}', '${qAudioId}')" ${count >= 2 ? 'disabled' : ''}>
-                🎧 ${count >= 2 ? 'LIMIT REACHED' : 'LISTEN (' + count + '/2)'}
-            </button>`;
+            aBox.innerHTML = `<button class="audio-btn" onclick="playAudio('${q.audio}', '${qAudioId}')" ${count >= 2 ? 'disabled' : ''}>🎧 ${count >= 2 ? 'LIMIT REACHED' : 'LISTEN (' + count + '/2)'}</button>`;
         } else { aBox.innerHTML = ""; }
         const img = document.getElementById('q-img');
         if(q.img) { img.src = q.img; img.style.display = "block"; } else { img.style.display = "none"; }
         
         const optDiv = document.getElementById('options-container');
         optDiv.innerHTML = "";
-
         q.shuffledOptions.forEach((opt, i) => {
-            let content = "";
-            if (opt.toString().match(/\.(jpg|jpeg|png)$/i)) { content = `<img src="${opt}" style="height:70px; border-radius:5px;">`; }
-            else if (opt.toString().match(/\.mp3$/i)) {
-                let optId = btoa(opt).substring(0, 15);
-                let count = audioLogs[optId] || 0;
-                content = `<button class="audio-btn" style="margin:0; width:auto; font-size:12px; padding:8px 15px;" onclick="event.stopPropagation(); playAudio('${opt}', '${optId}')" ${count >= 2 ? 'disabled' : ''}>🎧 ${count >= 2 ? 'LIMIT' : 'Audio (' + count + '/2)'}</button>`;
-            } else { content = `<span>${opt}</span>`; }
-
-            let reviewClass = "";
-            if (isReviewing) {
-                if (i === q.newAnsIndex) {
-                    reviewClass = "opt-correct-review"; 
-                } else if (answers[current] === i && i !== q.newAnsIndex) {
-                    reviewClass = "opt-wrong-review";
-                }
-            }
-
+            let content = opt.toString().match(/\.(jpg|jpeg|png)$/i) ? `<img src="${opt}" style="height:70px; border-radius:5px;">` : `<span>${opt}</span>`;
+            let reviewClass = isReviewing ? (i === q.newAnsIndex ? "opt-correct-review" : (answers[current] === i ? "opt-wrong-review" : "")) : "";
             optDiv.innerHTML += `<div class="option ${answers[current]===i && !isReviewing ?'active':''} ${reviewClass}" onclick="${isReviewing ? '' : `setAns(${i})`}"><div class="opt-num">${i+1}</div><div>${content}</div></div>`;
         });
         updatePalette();
@@ -310,8 +293,7 @@
     function toggleMenu() { document.getElementById('side-menu').classList.toggle('open'); }
     
     function updatePalette() {
-        const grid = document.getElementById('exam-grid');
-        grid.innerHTML = "";
+        const grid = document.getElementById('exam-grid'); grid.innerHTML = "";
         questions.forEach((_, i) => {
             const btn = document.createElement('div');
             btn.className = `num-btn ${answers[i] !== null ? 'done' : ''} ${i === current ? 'current' : ''}`;
@@ -326,110 +308,43 @@
     function loadCB() { 
         document.getElementById('cb-q-no').innerText = `Plate ${cbIdx + 1} of 5`; 
         document.getElementById('cb-display-img').src = `cb${cbList[cbIdx]}.jpg`; 
-        document.getElementById('cb-input').value = ""; 
-        
         if (cbIdx === 0) startCBTimer();
     }
-    
     function startCBTimer() {
-        if (cbTimerObj) clearInterval(cbTimerObj);
         cbTimerObj = setInterval(() => {
-            if (cbTimeLeft <= 0) {
-                clearInterval(cbTimerObj);
-                alert("Colour Blind Test အတွက် အချိန်ကုန်ဆုံးသွားပါပြီ။");
-                processResults();
-                return;
-            }
+            if (cbTimeLeft <= 0) { clearInterval(cbTimerObj); processResults(); return; }
             cbTimeLeft--;
-            let m = Math.floor(cbTimeLeft / 60);
-            let s = cbTimeLeft % 60;
-            document.getElementById('cb-q-no').innerText = `Plate ${cbIdx + 1} of 5 (Time: ${m}:${s < 10 ? '0' : ''}${s})`;
-            if (cbTimeLeft <= 10) document.getElementById('cb-q-no').style.color = "var(--danger)";
         }, 1000);
     }
-
     function nextCB() {
-        const val = document.getElementById('cb-input').value;
-        cbAnswers.push({ plate: cbList[cbIdx], userAns: val });
-        if(cbIdx < 4) {
-            cbIdx++;
-            loadCB();
-        } else { 
-            clearInterval(cbTimerObj);
-            processResults(); 
-        }
+        cbAnswers.push({ plate: cbList[cbIdx], userAns: document.getElementById('cb-input').value });
+        if(cbIdx < 4) { cbIdx++; loadCB(); } else { clearInterval(cbTimerObj); processResults(); }
     }
-
     async function processResults() {
-        let score = 0, reviewHTML = "<h3>UBT Questions Review</h3>";
+        let score = 0, reviewHTML = "";
         questions.forEach((q, i) => {
             const isCorrect = answers[i] === q.newAnsIndex;
             if(isCorrect) score += 2.5;
-            reviewHTML += `<div class="review-line" style="cursor:pointer;" onclick="jumpToQ(${i})">Q${i+1}: <span class="${isCorrect?'correct-ans':'wrong-ans'}">${isCorrect?'✓ Correct':'✗ Wrong'}</span></div>`;
+            reviewHTML += `<div class="review-line">Q${i+1}: <span class="${isCorrect?'correct-ans':'wrong-ans'}">${isCorrect?'✓ Correct':'✗ Wrong'}</span></div>`;
         });
-
-        reviewHTML += "<h3>Colour Blind Test Review</h3>";
-        let cbCorrectCount = 0;
-        cbAnswers.forEach((ans, i) => {
-            const isCBCorrect = ans.userAns == cbKey[ans.plate];
-            if(isCBCorrect) cbCorrectCount++;
-            reviewHTML += `<div class="review-line">Plate ${i+1}: <span class="${isCBCorrect?'correct-ans':'wrong-ans'}">${isCBCorrect?'✓ Pass':'✗ Fail'}</span> (Correct: ${cbKey[ans.plate]})</div>`;
-        });
-
         document.getElementById('cb-page').classList.remove('active-page');
         document.getElementById('result-page').classList.add('active-page');
-        const badge = document.getElementById('status-badge');
         document.getElementById('final-score').innerText = `Score: ${score}`;
-        document.getElementById('final-stats').innerText = `UBT: ${score/2.5}/${questions.length} | CB: ${cbCorrectCount}/5`;
         document.getElementById('review-list').innerHTML = reviewHTML;
-
-        if(score >= 95 && cbCorrectCount === 5) { 
-            badge.innerText = "PASS"; badge.style.color = "var(--success)"; 
-        } else { 
-            badge.innerText = "FAIL"; badge.style.color = "var(--danger)"; 
-        }
-        
-        const data = { name: document.getElementById('display-name').innerText, phone: globalPhone, sector: document.getElementById('user-job').value, score: score, cbScore: `${cbCorrectCount}/5` };
+        const data = { name: document.getElementById('display-name').innerText, phone: globalPhone, sector: document.getElementById('user-job').value, score: score };
         fetch(apiURL, { method: "POST", body: JSON.stringify(data) });
     }
-
-    function enterReview() {
-        isReviewing = true;
-        document.getElementById('result-page').classList.remove('active-page');
-        document.getElementById('exam-page').classList.add('active-page');
-        document.getElementById('exit-review-btn').style.display = "block";
-        document.getElementById('finish-btn').style.display = "none";
-        document.getElementById('timer').innerText = "REVIEW MODE";
-        current = 0;
-        renderQ();
-    }
-    function exitReview() {
-        isReviewing = false;
-        document.getElementById('exam-page').classList.remove('active-page');
-        document.getElementById('result-page').classList.add('active-page');
-        document.getElementById('exit-review-btn').style.display = "none";
-        document.getElementById('finish-btn').style.display = "block";
-    }
-
-    function jumpToQ(index) {
-        enterReview();
-        current = index;
-        renderQ();
-    }
-
+    function enterReview() { isReviewing = true; document.getElementById('result-page').classList.remove('active-page'); document.getElementById('exam-page').classList.add('active-page'); document.getElementById('exit-review-btn').style.display = "block"; current = 0; renderQ(); }
+    function exitReview() { location.reload(); }
     async function viewResults() {
         const name = prompt("အမည်ရိုက်ပါ:");
         if(name) {
-            try {
-                const res = await fetch(`${apiURL}?viewResult=true&name=${name}`);
-                const data = await res.json();
-                if(data.length > 0) {
-                    const lastEntry = data[data.length - 1];
-                    alert(`${name} ၏ နောက်ဆုံးရမှတ်မှာ: ${lastEntry[4]} ဖြစ်ပါသည်။`);
-                } else { alert("ဒီအမည်နဲ့ ဖြေဆိုထားတဲ့ မှတ်တမ်းမရှိသေးပါဘူး။"); }
-            } catch(e) { alert("အချက်အလက် ရှာဖွေရာတွင် အမှားအယွင်းရှိနေပါသည်။"); }
+            const res = await fetch(`${apiURL}?viewResult=true&name=${name}`);
+            const data = await res.json();
+            if(data.length > 0) alert(`${name} ၏ နောက်ဆုံးရမှတ်: ${data[data.length-1][4]}`);
+            else alert("မှတ်တမ်းမရှိပါ။");
         }
     }
 </script>
 </body>
-            </html>
+    </html>
