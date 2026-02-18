@@ -93,12 +93,27 @@
                 <div class="pay-info">လူကြီးမင်း ဝင်ခွင့်မရှိသေးပါ။အောက်မှာ ပြထားတဲ့ KBZpay QR codeကို scan ဖတ်ပြီး ၁၃၀၀၀ ကျပ်ပေးချေပြီး Screenshot ပို့ပေးပါ။ဖုန်းတစ်လုံးဘဲ ရှိသူများ scanဖတ်လို့ အဆင်ပြေအောင် အောက်မှာ ဖော်ပြထားသော Kpay 'QR'ကို ဖုန်းထဲသို့ downloadလုပ်ပြီး KBZpay appကို ဖွင့်ပြီး scanကိုနှိပ် ဓာတ်ပုံအယ်လ်ဘမ်မှ ၁၃၀၀၀ကျပ် Kpay QRကို ရွေးပြီး ငွေပေးချေပေးပါ။scanဖတ်လို့ အဆင်မပြေပါက အောက်မှာ ပြထားတဲ့ KBZpay ဖုန်းနံပါတ် 09450052637သို့ ငွေလွှဲပေးပြီး ငွေပေချေပြီးသော မှတ်တမ်းပို့ပေးပါ။</div>
                 <div class="qr-card">
                     <img id="qr-to-download" src="QR.png" class="qr-img" alt="QR Code">
-                    <a id="qr-download-link" href="#" download="KBZPay_QR.png" class="download-btn" onclick="downloadQR()">
+                    <a id="qr-download-link" href="#" download="KBZPay_QR.png" class="download-btn" .download-btn {
+    background: var(--kbz);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    justify-content: center;
+ onclick="downloadQR()">
                         📥 Save QR to Phone
                     </a>
                 </div>
                 <p style="color:var(--gold); font-weight:bold;">KPay No: 09450052637</p>
-                <input type="file" id="ss-upload" accept="image/*">
+                <input type="file" id="ss-upload" accept="image/*"
                 <button class="btn" style="background:var(--telegram); margin-top:10px;" id="send-ss-btn" onclick="sendToTelegram()">SEND SCREENSHOT TO ADMIN</button>
             </div>
             
@@ -435,4 +450,4 @@ function getDeviceId() {
     }
 </script>
 </body>
-    </html>
+                    </html>
