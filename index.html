@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>2026 UBT & Colour Blind Test</title>
     <style>
-        :root { --primary: #00b4db; --dark: #12192c; --white: #ffffff; --danger: #ff0055; --success: #2ecc71; --gold: #d4af37; --telegram: #0088cc; }
+        :root { --primary: #00b4db; --dark: #12192c; --white: #ffffff; --danger: #ff0055; --success: #2ecc71; --gold: #d4af37; --telegram: #0088cc; --kbz: #102d7b; }
         body { font-family: sans-serif; margin: 0; background: #f0f2f5; color: #333; overflow-x: hidden; }
         .page { display: none; min-height: 100vh; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
         .active-page { display: flex; }
@@ -22,10 +22,10 @@
         
         /* Payment Section Styling */
         #payment-section { display: none; margin-top: 20px; width: 85%; border-top: 1px dashed #555; padding-top: 20px; }
-        .qr-card { background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
-        .qr-img { width: 180px; height: 180px; object-fit: contain; }
-        .pay-info { font-size: 14px; color: var(--gold); margin-bottom: 15px; line-height: 1.5; }
-        .download-btn { background: #102d7b; color: #ffffff; padding: 10px 15px; border-radius: 5px; font-size: 12px; margin-top: 10px; cursor: pointer; border: none; font-weight: bold; display: flex; align-items: center; gap: 5px; text-decoration: none; }
+        .qr-card { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; flex-direction: column; align-items: center; }
+        .qr-img { width: 200px; height: 200px; object-fit: contain; }
+        .pay-info { font-size: 13px; color: var(--gold); margin-bottom: 15px; line-height: 1.5; text-align: justify; }
+        .download-btn { background: var(--kbz); color: white; padding: 10px 15px; border-radius: 5px; font-size: 12px; margin-top: 10px; cursor: pointer; border: none; font-weight: bold; display: flex; align-items: center; gap: 5px; text-decoration: none; }
 
         .contact-group { width: 85%; margin: 15px auto; display: flex; flex-direction: column; gap: 8px; }
         .contact-btn { padding: 10px; border-radius: 8px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
@@ -104,11 +104,10 @@
             </div>
             
             <div class="contact-group">
-                <a href="https://t.me/ubtsenterbot" target="_blank" class="contact-btn tg-btn">🫳အသေးစိတ်သိလိုပါက Telegramကနေ မေးရန်</a>
+                <a href="https://t.me/ubtsenterbot" target="_blank" class="contact-btn tg-btn">✈ Telegram မှ မေးမြန်းရန်</a>
                 <a href="tel:09450052637" class="contact-btn ph-btn">📞 09450052637 သို့ ဖုန်းခေါ်ဆိုရန်</a>
             </div>
-            <p style="font-size: 12px; color: #ffff00
-; cursor: pointer; margin-top: 15px;" onclick="viewResults()">VIEW FINAL RESULTS</p>
+            <p style="font-size: 12px; color: #58a6ff; cursor: pointer; margin-top: 15px;" onclick="viewResults()">VIEW FINAL RESULTS</p>
         </center>
     </div>
 </div>
@@ -155,9 +154,7 @@
         <div id="status-badge" class="status-badge"></div>
         <h2 id="final-score" style="margin: 0;">Score: 0</h2>
         <p id="final-stats"></p>
-        
         <button class="btn" style="background:var(--primary); width: 100%; margin-bottom: 10px;" onclick="enterReview()">REVIEW ANSWERS</button>
-
         <div class="review-scroll" id="review-list"></div>
         <div class="contact-group" style="width: 100%;">
             <p style="margin: 5px 0; font-size: 13px; color: #333; font-weight: bold;">[ အသေးစိတ်စုံစမ်းရန်/သင်တန်းအပ်ရန် ]</p>
@@ -180,14 +177,14 @@
     let cbTimeLeft = 60, cbTimerObj;
     const cbKey = { 1: "29", 2: "42", 3: "15", 4: "74", 5: "29" };
 
-// Function to handle QR Download
+    // Function to handle QR Download
     function downloadQR() {
         const qrImage = document.getElementById('qr-to-download');
         const downloadLink = document.getElementById('qr-download-link');
         downloadLink.href = qrImage.src;
     }
-    
-function getDeviceId() {
+
+    function getDeviceId() {
         let id = localStorage.getItem('ubt_device_id');
         if (!id) {
             id = 'dev-' + Math.random().toString(36).substr(2, 9) + Date.now();
@@ -435,4 +432,4 @@ function getDeviceId() {
     }
 </script>
 </body>
-                    </html>
+            </html>
