@@ -25,7 +25,7 @@
         .qr-card { background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
         .qr-img { width: 180px; height: 180px; object-fit: contain; }
         .pay-info { font-size: 14px; color: var(--gold); margin-bottom: 15px; line-height: 1.5; }
-        .download-btn { background: var(--kbz); color: white; padding: 10px 15px; border-radius: 5px; font-size: 12px; margin-top: 10px; cursor: pointer; border: none; font-weight: bold; display: flex; align-items: center; gap: 5px; text-decoration: none; }
+        .download-btn { background: #102d7b; color: #ffffff; padding: 10px 15px; border-radius: 5px; font-size: 12px; margin-top: 10px; cursor: pointer; border: none; font-weight: bold; display: flex; align-items: center; gap: 5px; text-decoration: none; }
 
         .contact-group { width: 85%; margin: 15px auto; display: flex; flex-direction: column; gap: 8px; }
         .contact-btn { padding: 10px; border-radius: 8px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
@@ -94,10 +94,9 @@
                 <div class="pay-info">လူကြီးမင်း ဝင်ခွင့်မရှိသေးပါ။ အောက်ပါ KBZpay QR code ကို သိမ်းဆည်း (သို့မဟုတ်) Scan ဖတ်ပြီး ၁၃၀၀၀ ကျပ်ပေးချေပါ။ ငွေလွှဲပြီးပါက Screenshot ကို အောက်တွင် ပေးပို့ပေးပါ။</div>
                 <div class="qr-card">
                     <img id="qr-to-download" src="QR.png" class="qr-img" alt="QR Code">
-                    <a id="qr-download-link" href="#" download="KBZPay_QR.png" 
-   style="background: #102d7b; color: white; padding: 10px; border-radius: 5px; text-decoration: none; display: inline-block; margin-top: 10px; font-size: 14px;">
-    📥 Save QR to Phone
-</a>
+                    <a id="qr-download-link" href="#" download="KBZPay_QR.png" class="download-btn" onclick="downloadQR()">
+                        📥 Save QR to Phone
+                    </a>
                 </div>
                 <p style="color:var(--gold); font-weight:bold;">KPay No: 09450052637</p>
                 <input type="file" id="ss-upload" accept="image/*">
@@ -105,7 +104,7 @@
             </div>
             
             <div class="contact-group">
-                <a href="https://t.me/ubtsenterbot" target="_blank" class="contact-btn tg-btn">💰Telegramမှာ မေးရန်</a>
+                <a href="https://t.me/ubtsenterbot" target="_blank" class="contact-btn tg-btn">🫳အသေးစိတ်သိလိုပါက Telegramကနေ မေးရန်</a>
                 <a href="tel:09450052637" class="contact-btn ph-btn">📞 09450052637 သို့ ဖုန်းခေါ်ဆိုရန်</a>
             </div>
             <p style="font-size: 12px; color: #ffff00
@@ -436,4 +435,4 @@ function getDeviceId() {
     }
 </script>
 </body>
-    </html>
+                    </html>
